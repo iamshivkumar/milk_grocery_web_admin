@@ -23,13 +23,15 @@ class Repository {
     for (var image in images) {
       product.images.add(await _uploadImage(map[image] as File));
     }
+    var data = product.toMap();
+    data['keys'] = _keys(product.name);
     if (product.id.isEmpty) {
-      await _firestore.collection('products').add(product.toMap());
+      await _firestore.collection('products').add(data);
     } else {
       await _firestore
           .collection('products')
           .doc(product.id)
-          .update(product.toMap());
+          .update(data);
     }
   }
 
@@ -93,5 +95,15 @@ class Repository {
     _firestore.collection('products').doc(id).update({
       'popular': value,
     });
+  }
+
+  List<String> _keys(String name) {
+    List<String> values = [];
+    String initValue = "";
+    for (var item in name.toLowerCase().split("")) {
+      initValue = initValue + item;
+      values.add(initValue);
+    }
+    return values;
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/ui/pages/categories/providers/categories_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
+import 'package:grocery_web_admin/utils/labels.dart';
 import 'package:grocery_web_admin/utils/utils.dart';
 
 import 'providers/write_mode_state_provider.dart';
@@ -12,6 +13,7 @@ class WriteProductScreen extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final writeMode = context.read(writeModeStateProvider);
@@ -63,7 +65,7 @@ class WriteProductScreen extends ConsumerWidget {
                     decoration: InputDecoration(
                       labelText: "Category",
                     ),
-                    validator: (v)=>v==null?"Select Category":null,
+                    validator: (v) => v == null ? "Select Category" : null,
                   ),
                 ),
                 Padding(
@@ -126,45 +128,128 @@ class WriteProductScreen extends ConsumerWidget {
                       .toList(),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    initialValue: model.amount,
-                    validator: (value) =>
-                        value!.isEmpty ? "Enter Amount" : null,
-                    onSaved: (v) => model.amount = v!,
-                    onChanged: (v) => model.amount = v,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Amount",
-                      suffix: SizedBox(
-                        height: 20,
-                        child: DropdownButton<String>(
-                          underline: SizedBox(),
-                          value: model.unit,
-                          elevation: 16,
-                          onChanged: (v) => model.unit = v!,
-                          items: Utils.units
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
+                  padding: const EdgeInsets.all(4),
+                  child: Column(
+                      children: model.options
+                          .map(
+                            (e) => Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(
+                                   Labels.rupee+ e.price.toString(),
+                                    style: TextStyle(
+                                        decoration: TextDecoration.lineThrough),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(Labels.rupee+e.salePrice.toString()),
+                                ),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(e.amount + " " + e.unit),
+                                ),
+                                Spacer(),
+                                IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    model.removeOption(e);
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+                          .toList()),
+                ),
+                Material(
+                  color: theme.primaryColorLight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Form(
+                      key: _formKey2,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.price.toString(),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Price" : null,
+                              onSaved: (v) => model.option = model.option
+                                  .copyWith(price: double.parse(v!)),
+                              onChanged: (v) => model.option =
+                                  model.option.copyWith(price: double.parse(v)),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(labelText: "Price"),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.salePrice.toString(),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Sale Price" : null,
+                              onSaved: (v) => model.option = model.option
+                                  .copyWith(salePrice: double.parse(v!)),
+                              onChanged: (v) => model.option = model.option
+                                  .copyWith(salePrice: double.parse(v)),
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  InputDecoration(labelText: "Sale Price"),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.amount,
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Amount" : null,
+                              onSaved: (v) => model.option =
+                                  model.option.copyWith(amount: v!),
+                              onChanged: (v) => model.option =
+                                  model.option.copyWith(amount: v),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: "Amount",
+                                suffix: SizedBox(
+                                  height: 20,
+                                  child: DropdownButton<String>(
+                                    underline: SizedBox(),
+                                    value: model.option.unit,
+                                    elevation: 16,
+                                    onChanged: (v) => model.option =
+                                        model.option.copyWith(unit: v),
+                                    items: Utils.units
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: MaterialButton(
+                              child: Text("ADD OPTION"),
+                              color: theme.primaryColor,
+                              onPressed: () {
+                                if (_formKey2.currentState!.validate()) {
+                                  _formKey2.currentState!.save();
+                                  model.addOption();
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    initialValue: model.price.toInt().toString(),
-                    validator: (value) => value!.isEmpty ? "Enter Price" : null,
-                    onSaved: (v) => model.price = double.parse(v!),
-                    onChanged: (v) => model.price = double.parse(v),
-                    keyboardType: TextInputType.number,
-                    decoration:
-                        InputDecoration(labelText: "Price", prefixText: " ₹ "),
                   ),
                 ),
                 Padding(

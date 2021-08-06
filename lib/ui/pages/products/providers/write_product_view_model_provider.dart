@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grocery_web_admin/core/models/option.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
 import 'package:grocery_web_admin/core/repository/repository.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
@@ -19,7 +20,8 @@ class WriteProductViewModel extends ChangeNotifier {
 
   bool loading = false;
 
-  Product get _product => _ref.read(selectedProductProvider).state??Product.empty();
+  Product get _product =>
+      _ref.read(selectedProductProvider).state ?? Product.empty();
   Repository get _repository => _ref.read(repositoryProvider);
 
   bool get forEdit => _product.id.isNotEmpty;
@@ -30,17 +32,7 @@ class WriteProductViewModel extends ChangeNotifier {
     _name = name;
   }
 
-  String? _amount;
-  String get amount => _amount ?? _product.amount;
-  set amount(String amount) {
-    _amount = amount;
-  }
 
-  double? _price;
-  double get price => _price ?? _product.price;
-  set price(double price) {
-    _price = price;
-  }
 
   String? _description;
   String get description => _description ?? _product.description;
@@ -48,44 +40,62 @@ class WriteProductViewModel extends ChangeNotifier {
     _description = description;
   }
 
-  String _unit = Utils.units.first;
-  String get unit => _unit;
-  set unit(String unit) {
-    _unit = unit;
-    notifyListeners();
-  }
+
 
   String? _category;
-  String? get category => _category??_product.category;
+  String? get category => _category ?? _product.category;
   set category(String? category) {
     _category = category;
   }
 
   bool? _active;
-  bool get active => _active??_product.active;
+  bool get active => _active ?? _product.active;
   set active(bool active) {
     _active = active;
     notifyListeners();
   }
+
   bool? _popular;
-  bool get popular => _popular??_product.popular;
+  bool get popular => _popular ?? _product.popular;
   set popular(bool popular) {
     _popular = popular;
     notifyListeners();
   }
+
+  List<Option> _options = [];
+  List<Option> _removedOptions = [];
+  List<Option> get options => (_options + _product.options)
+      .where((element) => !_removedOptions.contains(element))
+      .toList();
+
+  void removeOption(Option option) {
+    if (_options.contains(option)) {
+      _options.remove(option);
+    } else {
+      _removedOptions.add(option);
+    }
+    notifyListeners();
+  }
+
+  void addOption() {
+    if (!options.contains(option)) {
+      _options.add(option);
+    }
+    notifyListeners();
+  }
+
+  Option option = Option.empty();
 
   Future<void> writeProduct() async {
     loading = true;
     notifyListeners();
     var updated = _product.copyWith(
       name: name,
-      amount: amount,
       description: description,
-      price: price,
-      unit: unit,
       active: active,
       category: category,
       popular: popular,
+      options: options,
     );
     updated = updated.copyWith(
       images: _product.images
@@ -140,13 +150,5 @@ class WriteProductViewModel extends ChangeNotifier {
     });
   }
 
-  List<String> _keys() {
-    List<String> values = [];
-    String initValue = "";
-    for (var item in name.toLowerCase().split("")) {
-      initValue = initValue + item;
-      values.add(initValue);
-    }
-    return values;
-  }
+
 }
