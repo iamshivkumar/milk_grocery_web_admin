@@ -41,7 +41,6 @@ class WriteProductScreen extends ConsumerWidget {
                   trailing: IconButton(
                     onPressed: () {
                       writeMode.state = false;
-                      context.read(selectedProductProvider).state = null;
                     },
                     icon: Icon(Icons.close),
                   ),

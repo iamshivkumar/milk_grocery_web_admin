@@ -28,10 +28,7 @@ class Repository {
     if (product.id.isEmpty) {
       await _firestore.collection('products').add(data);
     } else {
-      await _firestore
-          .collection('products')
-          .doc(product.id)
-          .update(data);
+      await _firestore.collection('products').doc(product.id).update(data);
     }
   }
 

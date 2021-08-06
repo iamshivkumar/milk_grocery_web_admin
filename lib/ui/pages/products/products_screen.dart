@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/core/repository/repository.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/widgets/product_view.dart';
-import 'package:grocery_web_admin/utils/labels.dart';
 import 'providers/products_provider.dart';
 import 'providers/write_mode_state_provider.dart';
 import 'write_product_screen.dart';
@@ -20,7 +19,7 @@ class ProductsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text("Products"),
       ),
-      floatingActionButton: writeMode.state
+      floatingActionButton: writeMode.state || selectedProduct.state !=null
           ? SizedBox()
           : FloatingActionButton.extended(
               onPressed: () {
