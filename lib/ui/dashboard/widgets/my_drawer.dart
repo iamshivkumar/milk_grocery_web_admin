@@ -13,6 +13,8 @@ class MyDrawer extends ConsumerWidget {
   final List<Menu> menus = [
     Menu(Icons.apps, "Products"),
     Menu(Icons.category, "Categories"),
+    Menu(Icons.label, "Banners"),
+    Menu(Icons.delivery_dining, "Milk Mans"),
   ];
 
   @override

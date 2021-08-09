@@ -60,14 +60,15 @@ class Product {
     Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
     final Iterable list = map['options'];
     return Product(
-        id: doc.id,
-        name: map['name'],
-        images: List<String>.from(map['images']),
-        description: map['description'],
-        active: map['active'],
-        category: map['category'],
-        popular: map['popular'],
-        options: list.map((e) => Option.fromMap(e)).toList());
+      id: doc.id,
+      name: map['name'],
+      images: List<String>.from(map['images']),
+      description: map['description'],
+      active: map['active'],
+      category: map['category'],
+      popular: map['popular'],
+      options: list.map((e) => Option.fromMap(e)).toList(),
+    );
   }
 
   factory Product.empty() => Product(

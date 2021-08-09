@@ -48,7 +48,13 @@ class WriteProductScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButtonFormField<String>(
-                    value: model.category,
+                    value: categoriesAsync.data?.value
+                                .where(
+                                    (element) => element.name == model.category)
+                                .isNotEmpty ??
+                            false
+                        ? model.category
+                        : null,
                     elevation: 16,
                     onChanged: (v) => model.category = v!,
                     items: categoriesAsync.data != null
@@ -136,14 +142,15 @@ class WriteProductScreen extends ConsumerWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(4),
                                   child: Text(
-                                   Labels.rupee+ e.price.toString(),
+                                    Labels.rupee + e.price.toString(),
                                     style: TextStyle(
                                         decoration: TextDecoration.lineThrough),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4),
-                                  child: Text(Labels.rupee+e.salePrice.toString()),
+                                  child: Text(
+                                      Labels.rupee + e.salePrice.toString()),
                                 ),
                                 Spacer(),
                                 Padding(

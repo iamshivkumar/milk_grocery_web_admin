@@ -4,7 +4,9 @@ import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grocery_web_admin/core/models/banner.dart';
 import 'package:grocery_web_admin/core/models/category.dart';
+import 'package:grocery_web_admin/core/models/milk_man.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
 
 final repositoryProvider = Provider((ref) => Repository(ref));
@@ -46,12 +48,18 @@ class Repository {
         .then((value) => value.docs.isNotEmpty);
   }
 
-  void removeCategory({required List<ProductCategory> list}) {
+  void removeCategory({required ProductCategory category}) {
     _firestore.collection('categories').doc('categories').update(
       {
-        "categories": FieldValue.arrayRemove(
-          list.map((e) => e.toMap()).toList(),
-        ),
+        "categories": FieldValue.arrayRemove([category.toMap()]),
+      },
+    );
+  }
+
+  void removeBanner({required BannerModel category}) {
+    _firestore.collection('banners').doc('banners').update(
+      {
+        "banners": FieldValue.arrayRemove([category.toMap()]),
       },
     );
   }
@@ -71,6 +79,21 @@ class Repository {
     );
   }
 
+  Future<void> addBanner({
+    required BannerModel banner,
+    required List<BannerModel> banners,
+    File? file,
+  }) async {
+    String? image;
+    if (file != null) {
+      image = await _uploadImage(file);
+    }
+    banners.add(banner.copyWith(image: image));
+    await _firestore.collection('banners').doc('banners').update(
+      {"banners": banners.map((e) => e.toMap()).toList()},
+    );
+  }
+
   Stream<List<ProductCategory>> get streamCategories {
     return _firestore
         .collection('categories')
@@ -79,6 +102,17 @@ class Repository {
         .map((event) {
       final Iterable list = event.data()!['categories'];
       return list.map((e) => ProductCategory.fromMap(e)).toList();
+    });
+  }
+
+  Stream<List<BannerModel>> get streamBanners {
+    return _firestore
+        .collection('banners')
+        .doc('banners')
+        .snapshots()
+        .map((event) {
+      final Iterable list = event.data()!['banners'];
+      return list.map((e) => BannerModel.fromMap(e)).toList();
     });
   }
 
@@ -102,5 +136,31 @@ class Repository {
       values.add(initValue);
     }
     return values;
+  }
+
+  Future<void> writeMilkMan({required MilkMan milkMan}) async {
+    if (milkMan.id.isEmpty) {
+      await _firestore.collection('milkMans').add(milkMan.toMap());
+    } else {
+      await _firestore
+          .collection('milkMans')
+          .doc(milkMan.id)
+          .update(milkMan.toMap());
+    }
+  }
+
+  Stream<List<MilkMan>> get streamMilkMans {
+    return _firestore
+        .collection('milkMans')
+        .snapshots()
+        .map((event) => event.docs
+            .map(
+              (e) => MilkMan.fromFirestore(e),
+            )
+            .toList());
+  }
+
+    void delete({required String id}) {
+    _firestore.collection('milkMans').doc(id).delete();
   }
 }

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:grocery_web_admin/core/models/category.dart';
+import 'package:grocery_web_admin/core/models/banner.dart';
 import 'package:grocery_web_admin/core/repository/repository.dart';
-import 'package:grocery_web_admin/ui/pages/categories/providers/categories_provider.dart';
+import 'package:grocery_web_admin/ui/pages/banners/providers/banners_provider.dart';
 
 import 'widgets/write_category_dialog.dart';
 
-class CategoriesPage extends ConsumerWidget {
+class BannersPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
-    final categoriesStream = watch(categoriesProvider);
+    final bannersStream = watch(bannersProvider);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => WriteCategoryDialog(
-                    param: WriteCategoryParam(
-                      list: categoriesStream.data!.value,
+                  builder: (context) => WriteBannerDialog(
+                    param: WriteBannerParam(
+                      list: bannersStream.data!.value,
                     ),
                   ),
                 );
@@ -30,14 +30,14 @@ class CategoriesPage extends ConsumerWidget {
         title: Text("Categories"),
         actions: [],
       ),
-      body: categoriesStream.when(
+      body: bannersStream.when(
         data: (categories) => SingleChildScrollView(
           child: Card(
             child: DataTable(
               checkboxHorizontalMargin: 0,
               columns: [
                 DataColumn(label: Text("Index")),
-                DataColumn(label: Text("Name")),
+                DataColumn(label: Text("Category")),
                 DataColumn(label: Text("Image")),
                 DataColumn(label: Text("Edit")),
                 DataColumn(label: Text("Delete")),
@@ -47,7 +47,7 @@ class CategoriesPage extends ConsumerWidget {
                     (e) => DataRow(
                       cells: [
                         DataCell(Text((categories.indexOf(e) + 1).toString())),
-                        DataCell(Text(e.name)),
+                        DataCell(Text(e.category)),
                         DataCell(SizedBox(
                           height: 56,
                           width: 56,
@@ -56,12 +56,7 @@ class CategoriesPage extends ConsumerWidget {
                         DataCell(Icon(Icons.edit), onTap: () {
                           showDialog(
                             context: context,
-                            builder: (context) => WriteCategoryDialog(
-                              param: WriteCategoryParam(
-                                list: categories,
-                                prev: e,
-                              ),
-                            ),
+                            builder: (context) => WriteBannerDialog(param: WriteBannerParam(list: categories,prev: e),),
                           );
                         }),
                         DataCell(Icon(Icons.delete), onTap: () {
@@ -69,7 +64,7 @@ class CategoriesPage extends ConsumerWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               title: Text(
-                                  "Are you sure you want delete ${e.name} category?"),
+                                  "Are you sure you want delete ${e.category} banner?"),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -80,7 +75,7 @@ class CategoriesPage extends ConsumerWidget {
                                 MaterialButton(
                                   color: theme.accentColor,
                                   onPressed: () {
-                                    context.read(repositoryProvider).removeCategory(category: e);
+                                    context.read(repositoryProvider).removeBanner(category: e);
                                     Navigator.pop(context);
                                   },
                                   child: Text("YES"),
