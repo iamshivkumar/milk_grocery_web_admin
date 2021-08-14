@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/ui/pages/banners/banners_page.dart';
 import 'package:grocery_web_admin/ui/pages/categories/categories_page.dart';
+import 'package:grocery_web_admin/ui/pages/customers/customers_page.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/milk_mans_page.dart';
+import 'package:grocery_web_admin/ui/pages/orders/orders_page.dart';
 import 'package:grocery_web_admin/ui/pages/products/products_screen.dart';
 
 import 'providers/index_provider.dart';
@@ -21,6 +23,8 @@ class Dashboard extends ConsumerWidget {
             CategoriesPage(),
             BannersPage(),
             MilkMansPage(),
+            CustomersPage(),
+            OrdersPage(),
           ][index.state],
         ),
       ],

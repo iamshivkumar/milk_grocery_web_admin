@@ -6,8 +6,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/core/models/banner.dart';
 import 'package:grocery_web_admin/core/models/category.dart';
+import 'package:grocery_web_admin/core/models/customer.dart';
+import 'package:grocery_web_admin/core/models/order.dart';
+import 'package:grocery_web_admin/core/models/params.dart';
 import 'package:grocery_web_admin/core/models/milk_man.dart';
+import 'package:grocery_web_admin/core/models/params_with_date.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
+import 'package:grocery_web_admin/core/models/subscription.dart';
+import 'package:grocery_web_admin/utils/dates.dart';
 
 final repositoryProvider = Provider((ref) => Repository(ref));
 
@@ -160,7 +166,69 @@ class Repository {
             .toList());
   }
 
-    void delete({required String id}) {
+  void delete({required String id}) {
     _firestore.collection('milkMans').doc(id).delete();
+  }
+
+  Stream<List<Customer>> customersStream(Params params) {
+    return _firestore
+        .collection('users')
+        .where('milkManId', isEqualTo: params.milkManId)
+        .where('area', isEqualTo: params.area)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Customer.fromFirestore(e),
+              )
+              .toList(),
+        );
+  }
+
+  Stream<List<Subscription>> subscriptionsStream(Params params) {
+    return _firestore
+        .collection('subscription')
+        .where('milkManId', isEqualTo: params.milkManId)
+        .where('address.area', isEqualTo: params.area)
+        .where(
+          'startDate',
+          isGreaterThanOrEqualTo: Dates.today.subtract(
+            Duration(days: 30),
+          ),
+        )
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Subscription.fromFirestore(e),
+              )
+              .toList(),
+        );
+  }
+
+  Stream<List<Order>> ordersStream(ParamsWithDate params) {
+    final date = params.dateTime.subtract(Duration(days: 1));
+    return _firestore
+        .collection('orders')
+        .where('milkManId', isEqualTo: params.milkManId)
+        .where('address.area', isEqualTo: params.area)
+        .where(
+          'createdOn',
+          isGreaterThanOrEqualTo: date,
+          isLessThanOrEqualTo: date.add(
+            Duration(hours: 23, minutes: 59),
+          ),
+        )
+        .snapshots()
+        .map(
+      (event) {
+        print(event.docs);
+        return event.docs
+            .map(
+              (e) => Order.fromFirestore(e),
+            )
+            .toList();
+      },
+    );
   }
 }

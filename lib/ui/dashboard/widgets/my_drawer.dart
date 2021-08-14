@@ -15,6 +15,8 @@ class MyDrawer extends ConsumerWidget {
     Menu(Icons.category, "Categories"),
     Menu(Icons.label, "Banners"),
     Menu(Icons.delivery_dining, "Milk Mans"),
+    Menu(Icons.group, "Customers"),
+    Menu(Icons.shopping_bag, "Orders"),
   ];
 
   @override

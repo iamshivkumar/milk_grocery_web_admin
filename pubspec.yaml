@@ -30,8 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   #statemanagement
-  flutter_riverpod: ^0.14.0+3
+  hooks_riverpod: ^0.14.0+4
   equatable: ^2.0.3
+  flutter_hooks: ^0.17.0
+  
 
   #firebase
   firebase_auth: ^3.0.1

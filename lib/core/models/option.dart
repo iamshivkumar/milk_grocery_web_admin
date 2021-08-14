@@ -1,4 +1,4 @@
-
+import 'package:grocery_web_admin/utils/labels.dart';
 import 'package:grocery_web_admin/utils/utils.dart';
 
 class Option {
@@ -36,6 +36,10 @@ class Option {
     };
   }
 
+  String get priceLabel => "${Labels.rupee}${price.toInt().toString()}";
+  String get salePriceLabel => "${Labels.rupee}${salePrice.toInt().toString()}";
+  String get amountLabel => "$amount $unit";
+
   factory Option.fromMap(Map<String, dynamic> map) {
     return Option(
       amount: map['amount'],
@@ -44,7 +48,7 @@ class Option {
       unit: map['unit'],
     );
   }
-    factory Option.empty() {
+  factory Option.empty() {
     return Option(
       amount: '',
       price: 0,
