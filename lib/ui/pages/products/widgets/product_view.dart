@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
+import 'package:grocery_web_admin/ui/pages/products/providers/abc_value_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/products_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/write_mode_state_provider.dart';
@@ -11,8 +12,10 @@ class ProductView extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
     final style = theme.textTheme;
+    final model = watch(abcValueProvider);
+
     final selectedProduct = watch(selectedProductProvider);
-    final productsAsync = watch(productsProvider);
+    final productsAsync = watch(productsProvider(model.state));
     return Container(
       width: 400,
       color: theme.cardColor,

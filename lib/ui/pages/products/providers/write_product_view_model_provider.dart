@@ -150,6 +150,4 @@ class WriteProductViewModel extends ChangeNotifier {
       }
     });
   }
-
-
 }

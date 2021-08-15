@@ -65,6 +65,9 @@ class CategoriesPage extends ConsumerWidget {
                           );
                         }),
                         DataCell(Icon(Icons.delete), onTap: () {
+                          if(e.name=="Milky"){
+                            return ;
+                          }
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -80,6 +83,7 @@ class CategoriesPage extends ConsumerWidget {
                                 MaterialButton(
                                   color: theme.accentColor,
                                   onPressed: () {
+
                                     context.read(repositoryProvider).removeCategory(category: e);
                                     Navigator.pop(context);
                                   },

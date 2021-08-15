@@ -243,4 +243,22 @@ class Repository {
       },
     );
   }
+
+  void areaAcceptReject(
+      {required String id, required String area, required bool accept}) {
+    final batch = _firestore.batch();
+    batch.update(_firestore.collection('milkMans').doc(id), {
+      'pendingAreas': FieldValue.arrayRemove([area]),
+    });
+    if (accept) {
+      batch.update(_firestore.collection('milkMans').doc(id), {
+        'areas': FieldValue.arrayUnion([area]),
+      });
+    } else {
+      batch.update(_firestore.collection('milkMans').doc(id), {
+        'rejectedAreas': FieldValue.arrayUnion([area]),
+      });
+    }
+    batch.commit();
+  }
 }

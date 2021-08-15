@@ -24,6 +24,7 @@ class WriteCategoryDialog extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              readOnly: model.name=="Milky"?true:false,
               initialValue: model.name,
               onSaved: (v) => model.name = v!,
               onChanged: (v) => model.name = v,
