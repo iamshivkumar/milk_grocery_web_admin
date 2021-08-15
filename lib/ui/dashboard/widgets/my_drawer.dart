@@ -17,6 +17,7 @@ class MyDrawer extends ConsumerWidget {
     Menu(Icons.delivery_dining, "Milk Mans"),
     Menu(Icons.group, "Customers"),
     Menu(Icons.shopping_bag, "Orders"),
+    Menu(Icons.subscriptions, "Subscriptions"),
   ];
 
   @override
@@ -24,32 +25,35 @@ class MyDrawer extends ConsumerWidget {
     final theme = Theme.of(context);
     final index = watch(indexProvider);
 
-    return Drawer(
-      child: Material(
-        color: theme.primaryColor,
-        child: Column(
-          children: [
-            AppBar(),
-            Expanded(
-              child: Theme(
-                data: ThemeData.dark(),
-                child: ListView.builder(
-                  itemCount: menus.length,
-                  itemBuilder: (context, i) => ListTile(
-                    selected: index.state == i,
-                    selectedTileColor: theme.primaryColorLight,
-                    onTap: () {
-                      index.state = i;
-                    },
-                    leading: Icon(menus[i].icon),
-                    title: Text(
-                      menus[i].name,
+    return SizedBox(
+      width: 250,
+      child: Drawer(
+        child: Material(
+          color: theme.primaryColor,
+          child: Column(
+            children: [
+              AppBar(),
+              Expanded(
+                child: Theme(
+                  data: ThemeData.dark(),
+                  child: ListView.builder(
+                    itemCount: menus.length,
+                    itemBuilder: (context, i) => ListTile(
+                      selected: index.state == i,
+                      selectedTileColor: theme.primaryColorLight,
+                      onTap: () {
+                        index.state = i;
+                      },
+                      leading: Icon(menus[i].icon),
+                      title: Text(
+                        menus[i].name,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

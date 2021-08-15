@@ -5,6 +5,7 @@ import 'package:grocery_web_admin/ui/pages/categories/categories_page.dart';
 import 'package:grocery_web_admin/ui/pages/customers/customers_page.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/milk_mans_page.dart';
 import 'package:grocery_web_admin/ui/pages/orders/orders_page.dart';
+import 'package:grocery_web_admin/ui/pages/orders/subscriptions_page.dart';
 import 'package:grocery_web_admin/ui/pages/products/products_screen.dart';
 
 import 'providers/index_provider.dart';
@@ -25,6 +26,7 @@ class Dashboard extends ConsumerWidget {
             MilkMansPage(),
             CustomersPage(),
             OrdersPage(),
+            SubscriptionsPage(),
           ][index.state],
         ),
       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:grocery_web_admin/core/models/merged_order.dart';
+import 'package:grocery_web_admin/core/models/order.dart';
 import 'package:grocery_web_admin/core/models/params.dart';
 import 'package:grocery_web_admin/core/models/milk_man.dart';
 import 'package:grocery_web_admin/core/models/params_with_date.dart';
@@ -11,13 +13,14 @@ import 'package:grocery_web_admin/ui/widgets/loading.dart';
 import 'package:grocery_web_admin/utils/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OrdersPage extends HookWidget {
+class OrdersPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
-    final milkMansStream = useProvider(milkMansProvider);
-    final model = useProvider(ordersViewModelProvider);
-    final controller = useTextEditingController(text: Utils.formatedDate(model.dateTime));
+    final milkMansStream = watch(milkMansProvider);
+    final model = watch(ordersViewModelProvider);
+    // final controller =
+    //     useTextEditingController(text: Utils.formatedDate(model.dateTime));
     return Scaffold(
       appBar: AppBar(
         title: Text("Orders"),
@@ -37,21 +40,9 @@ class OrdersPage extends HookWidget {
                       width: 300,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: controller,
-                          readOnly: true,
-                          onTap: () async {
-                            final date = await showDatePicker(
-                              context: context,
-                              initialDate: model.dateTime,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2025),
-                            );
-                            if(date!=null){
-                              controller.text = Utils.formatedDate(date);
-                              model.dateTime = date;
-                            }
-                          },
+                        child: DateField(
+                          onSelect: (v) => model.dateTime = v,
+                          initial: model.dateTime,
                         ),
                       ),
                     ),
@@ -101,42 +92,113 @@ class OrdersPage extends HookWidget {
             ),
             model.milkMan != null && model.area != null
                 ? Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        final subscriptions = useProvider(
-                              subscriptionsProivder(
-                                Params(
-                                  milkManId: model.milkMan!.mobile,
-                                  area: model.area!,
-                                ),
-                              ),
-                            )
-                                .data
-                                ?.value
+                    child: Consumer(
+                      builder: (context, watch, child) {
+                        final subscriptions = watch(
+                          subscriptionsProivder(
+                            Params(
+                              milkManId: model.milkMan!.mobile,
+                              area: model.area!,
+                            ),
+                          ),
+                        ).when(
+                            data: (values) => values
                                 .where((element) => element.deliveries
                                     .where((d) => d.date == model.dateTime)
                                     .isNotEmpty)
-                                .toList() ??
-                            [];
-                        final orders = useProvider(
-                              ordersProvider(
-                                ParamsWithDate(
-                                  milkManId: model.milkMan!.mobile,
-                                  area: model.area!,
-                                  dateTime: model.dateTime,
-                                ),
+                                .toList(),
+                            loading: () => [],
+                            error: (e, s) {
+                              print(e.toString());
+                              return [];
+                            });
+
+                        final orders = watch(
+                          ordersProvider(
+                            ParamsWithDate(
+                              milkManId: model.milkMan!.mobile,
+                              area: model.area!,
+                              dateTime: model.dateTime,
+                            ),
+                          ),
+                        ).when(
+                            data: (values) => values,
+                            loading: () => [],
+                            error: (e, s) {
+                              print(e.toString());
+                              return [];
+                            });
+                        final list = (subscriptions.cast<dynamic>() +
+                                orders.cast<dynamic>())
+                            .map(
+                              (e) => e is Order
+                                  ? MergedOrder.fromOrder(e)
+                                  : MergedOrder.fromSubscription(
+                                      subscription: e, date: model.dateTime),
+                            )
+                            .toList();
+                        final List<DataRow> rows = [];
+                        for (var order in list) {
+                          final color = list.indexOf(order).isEven
+                              ? theme.primaryColorLight
+                              : Colors.white;
+                          rows.add(
+                            DataRow(cells: [
+                              DataCell(
+                                  Text((list.indexOf(order) + 1).toString())),
+                              DataCell(Text(order.label)),
+                              DataCell(Text(order.customerName)),
+                              DataCell(Text(order.address)),
+                              DataCell(Text(order.products.first.name)),
+                              DataCell(Text(order.products.first.price)),
+                              DataCell(Text(order.products.first.quantity)),
+                              DataCell(Text(order.price)),
+                              DataCell(Text(order.walletAmount)),
+                              DataCell(Text(order.total)),
+                              DataCell(Text(order.status)),
+                            ], color: MaterialStateProperty.all(color)),
+                          );
+                          for (var product in order.products.skip(1)) {
+                            rows.add(
+                              DataRow(
+                                cells: [
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                  DataCell(Text(product.name)),
+                                  DataCell(Text(product.price)),
+                                  DataCell(Text(product.quantity)),
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                  DataCell.empty,
+                                ],
+                                color: MaterialStateProperty.all(color),
                               ),
-                            ).data?.value ??
-                            [];
-                        final list = subscriptions.cast<dynamic>() +
-                            orders.cast<dynamic>();
+                            );
+                          }
+                        }
+                        print(rows.length);
                         return SingleChildScrollView(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Card(
                               child: DataTable(
-                                columns: [],
-                                rows: [],
+                                columns: [
+                                  DataColumn(label: Text("Index")),
+                                  DataColumn(label: Text("Type")),
+                                  DataColumn(label: Text("Customer")),
+                                  DataColumn(label: Text("Address")),
+                                  DataColumn(label: Text("Product")),
+                                  DataColumn(label: Text("Price")),
+                                  DataColumn(label: Text("Quantity")),
+                                  DataColumn(label: Text("Total Price")),
+                                  DataColumn(label: Text("Wallet Amount Used")),
+                                  DataColumn(label: Text("Further Paid")),
+                                  DataColumn(label: Text("Status")),
+                                ],
+                                rows: rows,
                               ),
                             ),
                           ),
@@ -150,6 +212,38 @@ class OrdersPage extends HookWidget {
         loading: () => Loading(),
         error: (e, s) => SizedBox(),
       ),
+    );
+  }
+}
+
+class DateField extends HookWidget {
+  const DateField({
+    Key? key,
+    required this.initial,
+    required this.onSelect,
+  }) : super(key: key);
+
+  final Function(DateTime) onSelect;
+  final DateTime initial;
+  @override
+  Widget build(BuildContext context) {
+    final controller =
+        useTextEditingController(text: Utils.formatedDate(initial));
+    return TextField(
+      controller: controller,
+      readOnly: true,
+      onTap: () async {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: initial,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2025),
+        );
+        if (date != null) {
+          controller.text = Utils.formatedDate(date);
+          onSelect(date);
+        }
+      },
     );
   }
 }
