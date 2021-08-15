@@ -27,7 +27,8 @@ class Repository {
   Future<void> writeProduct(
       {required Product product,
       required List<String> images,
-      required Map<String, File> map}) async {
+      required Map<String, File> map,
+      String? prevName}) async {
     for (var image in images) {
       product.images.add(await _uploadImage(map[image] as File));
     }
@@ -35,8 +36,19 @@ class Repository {
     data['keys'] = _keys(product.name);
     if (product.id.isEmpty) {
       await _firestore.collection('products').add(data);
+      _firestore.collection('search_keys').doc('search_keys').update({
+        'keys': FieldValue.arrayUnion([product.name])
+      });
     } else {
       await _firestore.collection('products').doc(product.id).update(data);
+      if (prevName != null) {
+        _firestore.collection('search_keys').doc('search_keys').update({
+          'keys': FieldValue.arrayUnion([product.name])
+        });
+        _firestore.collection('search_keys').doc('search_keys').update({
+          'keys': FieldValue.arrayRemove([prevName])
+        });
+      }
     }
   }
 

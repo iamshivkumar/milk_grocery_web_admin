@@ -107,6 +107,7 @@ class WriteProductViewModel extends ChangeNotifier {
         product: updated,
         images: _images,
         map: _map,
+        prevName: _product.id.isNotEmpty&& name!=_product.name?_product.name:null,
       );
     } catch (e) {
       print(e);
