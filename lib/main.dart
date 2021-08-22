@@ -19,7 +19,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final auth = watch(authViewModelProvider);
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Grocery Admin',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         inputDecorationTheme: InputDecorationTheme(

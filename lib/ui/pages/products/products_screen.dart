@@ -22,7 +22,7 @@ class ProductsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text("Products"),
       ),
-      floatingActionButton: writeMode.state || selectedProduct.state !=null
+      floatingActionButton: writeMode.state || selectedProduct.state != null
           ? SizedBox()
           : FloatingActionButton.extended(
               onPressed: () {
@@ -34,89 +34,96 @@ class ProductsScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: productsAsync.when(
-            data: (products) => SingleChildScrollView(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AbcView(
-                      selected: model.state,
-                      onSelect: (e)=>model.state = e,
-                    ),
-                    Card(
-                      child: DataTable(
-                        showCheckboxColumn: false,
-                        columns: [
-                          DataColumn(label: Text('Index')),
-                          DataColumn(label: Text('Name')),
-                          DataColumn(label: Text('Category')),
-                          DataColumn(label: Text('Images')),
-                          DataColumn(label: Text('Popular')),
-                          DataColumn(label: Text('Active')),
-                          DataColumn(label: Text('Action')),
-                        ],
-                        rows: products
-                            .map(
-                              (e) => DataRow(
-                                selected: e == selectedProduct.state,
-                                onSelectChanged: (v) {
-                                  if (v!) {
-                                    selectedProduct.state = e;
-                                  } else {
-                                    selectedProduct.state = null;
-                                  }
-                                },
-                                cells: [
-                                  DataCell(
-                                      Text((products.indexOf(e) + 1).toString())),
-                                  DataCell(Text(e.name)),
-                                  DataCell(Text(e.category!)),
-                                  DataCell(
-                                    SizedBox(
-                                      width: e.images.length * 56,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: e.images
-                                            .map((i) => Image.network(i))
-                                            .toList(),
+            child: productsAsync.when(
+              data: (products) => SingleChildScrollView(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AbcView(
+                        selected: model.state,
+                        onSelect: (e) => model.state = e,
+                      ),
+                      Card(
+                        child: DataTable(
+                          showCheckboxColumn: false,
+                          columns: [
+                            DataColumn(label: Text('Index')),
+                            DataColumn(label: Text('Name')),
+                            DataColumn(label: Text('Category')),
+                            DataColumn(label: Text('Images')),
+                            DataColumn(label: Text('Popular')),
+                            DataColumn(label: Text('Quantity')),
+                            DataColumn(label: Text('Active')),
+                            DataColumn(label: Text('Action')),
+                          ],
+                          rows: products
+                              .map(
+                                (e) => DataRow(
+                                  selected: e == selectedProduct.state,
+                                  onSelectChanged: (v) {
+                                    if (v!) {
+                                      selectedProduct.state = e;
+                                    } else {
+                                      selectedProduct.state = null;
+                                    }
+                                  },
+                                  cells: [
+                                    DataCell(Text(
+                                        (products.indexOf(e) + 1).toString())),
+                                    DataCell(Text(e.name)),
+                                    DataCell(Text(e.category!)),
+                                    DataCell(
+                                      SizedBox(
+                                        width: e.images.length * 56,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: e.images
+                                              .map((i) => Image.network(i))
+                                              .toList(),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Switch(
-                                      value: e.popular,
-                                      onChanged: (v) =>
-                                          repository.updatedPopular(e.id, v),
+                                    DataCell(
+                                      Switch(
+                                        value: e.popular,
+                                        onChanged: (v) =>
+                                            repository.updatedPopular(e.id, v),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Switch(
-                                      value: e.active,
-                                      onChanged: (v) =>
-                                          repository.updatedActive(e.id, v),
+                                    DataCell(
+                                      Text(
+                                        e.quantity.toString(),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Icon(Icons.delete),
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
-                            )
-                            .toList(),
+                                    DataCell(
+                                      Switch(
+                                        value: e.active,
+                                        onChanged: (v) =>
+                                            repository.updatedActive(e.id, v),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Icon(Icons.delete),
+                                      onTap: () {},
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+              loading: () => Center(
+                child: CircularProgressIndicator(),
+              ),
+              error: (e, s) => Text(e.toString()),
             ),
-            loading: () => Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (e, s) => SizedBox(),
-          )),
+          ),
           writeMode.state
               ? WriteProductScreen()
               : selectedProduct.state != null

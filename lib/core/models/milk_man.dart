@@ -44,7 +44,7 @@ class MilkMan {
       'mobile': mobile,
       'areas': areas,
       'walletAmount': walletAmount,
-      'areasRequests': pendingAreas,
+      'pendingAreas': pendingAreas,
       'rejectedAreas': rejectedAreas,
     };
   }

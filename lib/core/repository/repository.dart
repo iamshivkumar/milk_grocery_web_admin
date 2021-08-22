@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/core/models/banner.dart';
 import 'package:grocery_web_admin/core/models/category.dart';
+import 'package:grocery_web_admin/core/models/charge.dart';
 import 'package:grocery_web_admin/core/models/customer.dart';
 import 'package:grocery_web_admin/core/models/order.dart';
 import 'package:grocery_web_admin/core/models/params.dart';
@@ -259,6 +260,27 @@ class Repository {
         'rejectedAreas': FieldValue.arrayUnion([area]),
       });
     }
+    batch.commit();
+  }
+
+  void editWalletAmount(
+      {required double amount, required String id, required bool isMilkMan}) {
+    final batch = _firestore.batch();
+    batch.update(
+        _firestore.collection(isMilkMan ? "milkMans" : "users").doc(id), {
+      "walletAmount": FieldValue.increment(amount),
+    });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: amount,
+        from: null,
+        to: id,
+        ids: [id],
+        type: ChargesType.byAdmin,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
     batch.commit();
   }
 }

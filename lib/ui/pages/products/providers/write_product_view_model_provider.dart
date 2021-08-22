@@ -7,7 +7,6 @@ import 'package:grocery_web_admin/core/models/option.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
 import 'package:grocery_web_admin/core/repository/repository.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
-import 'package:grocery_web_admin/utils/utils.dart';
 
 final writeProductViewModelProivider =
     ChangeNotifierProvider.autoDispose<WriteProductViewModel>(
@@ -40,7 +39,11 @@ class WriteProductViewModel extends ChangeNotifier {
     _description = description;
   }
 
-
+  int? _quantity;
+  int get quantity => _quantity??_product.quantity;
+  set quantity(int quantity) {
+    _quantity = quantity;
+  }
 
   String? _category;
   String? get category => _category ?? _product.category;
@@ -96,6 +99,7 @@ class WriteProductViewModel extends ChangeNotifier {
       category: category,
       popular: popular,
       options: options,
+      quantity: quantity,
     );
     updated = updated.copyWith(
       images: _product.images

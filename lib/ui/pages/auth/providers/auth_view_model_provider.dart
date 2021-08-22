@@ -17,8 +17,8 @@ class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  String email = 'shivkumar.konade@virtoustack.com';
-  String password = 'Shiv@123';
+  String email = 'admin@gmail.com';
+  String password = 'Admin@123';
 
   bool _loading = false;
   bool get loading => _loading;

@@ -271,6 +271,18 @@ class WriteProductScreen extends ConsumerWidget {
                     decoration: InputDecoration(labelText: "About Product"),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: model.quantity.toString(),
+                    validator: (value) =>
+                        value!.isEmpty ? "Enter Quantity" : null,
+                    onSaved: (v) => model.quantity = int.parse(v!),
+                    onChanged: (v) => model.quantity = int.parse(v),
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(labelText: "Quantity"),
+                  ),
+                ),
                 Row(
                   children: [
                     Checkbox(
@@ -303,7 +315,7 @@ class WriteProductScreen extends ConsumerWidget {
                             }
                           },
                         ),
-                )
+                ),
               ],
             ),
           ),

@@ -4,7 +4,9 @@ import 'package:grocery_web_admin/core/repository/repository.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/providers/milk_mans_provider.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/providers/selected_product_provider.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/providers/write_milk_man_view_model_provider.dart';
+import 'package:grocery_web_admin/ui/pages/milk_mans/widgets/add_wallet_amount_dialog.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/widgets/write_milk_man_view.dart';
+import 'package:grocery_web_admin/utils/labels.dart';
 
 class MilkMansPage extends ConsumerWidget {
   @override
@@ -31,6 +33,9 @@ class MilkMansPage extends ConsumerWidget {
                       columns: [
                         DataColumn(label: Text("Index")),
                         DataColumn(label: Text("Name")),
+                        DataColumn(
+                          label: Text("Wallet Amount"),
+                        ),
                         DataColumn(label: Text("Mobile Number")),
                         DataColumn(label: Text("Areas")),
                         DataColumn(label: Text("Delete")),
@@ -39,18 +44,32 @@ class MilkMansPage extends ConsumerWidget {
                           .map(
                             (e) => DataRow(
                               selected: e == selectedMilkMan.state,
-                            onSelectChanged: (v) {
-                              if (v!) {
-                                context.read(writeMilkManViewModelProvider).clear();
-                                selectedMilkMan.state = e;
-                              } else {
-                                selectedMilkMan.state = null;
-                              }
-                            },
+                              onSelectChanged: (v) {
+                                if (v!) {
+                                  context
+                                      .read(writeMilkManViewModelProvider)
+                                      .clear();
+                                  selectedMilkMan.state = e;
+                                } else {
+                                  selectedMilkMan.state = null;
+                                }
+                              },
                               cells: [
                                 DataCell(Text(
                                     (categories.indexOf(e) + 1).toString())),
                                 DataCell(Text(e.name)),
+                                DataCell(
+                                    Text("${Labels.rupee}${e.walletAmount}"),
+                                    showEditIcon: true, onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AddWalletAmountDialog(
+                                      amount: e.walletAmount,
+                                      id: e.id,
+                                      isMilkMan: true,
+                                    ),
+                                  );
+                                }),
                                 DataCell(Text(e.mobile)),
                                 DataCell(
                                   Row(

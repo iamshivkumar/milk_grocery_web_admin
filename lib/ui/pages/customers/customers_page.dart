@@ -5,6 +5,7 @@ import 'package:grocery_web_admin/core/models/milk_man.dart';
 import 'package:grocery_web_admin/ui/pages/customers/providers/customers_provider.dart';
 import 'package:grocery_web_admin/ui/pages/customers/providers/customers_view_model_provider.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/providers/milk_mans_provider.dart';
+import 'package:grocery_web_admin/ui/pages/milk_mans/widgets/add_wallet_amount_dialog.dart';
 import 'package:grocery_web_admin/ui/widgets/loading.dart';
 import 'package:grocery_web_admin/utils/labels.dart';
 
@@ -112,13 +113,20 @@ class CustomersPage extends ConsumerWidget {
                                             DataCell(Text(e.number!)),
                                             DataCell(Text(e.landMark!)),
                                             DataCell(
-                                              Text(
-                                                Labels.rupee +
-                                                    e.walletAmount
-                                                        .toInt()
-                                                        .toString(),
-                                              ),
-                                            ),
+                                                Text(
+                                                  "${Labels.rupee}${e.walletAmount}",
+                                                ),
+                                                showEditIcon: true, onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AddWalletAmountDialog(
+                                                  amount: e.walletAmount,
+                                                  id: e.id,
+                                                  isMilkMan: false,
+                                                ),
+                                              );
+                                            }),
                                             DataCell(
                                               Text(e.mobile),
                                             ),
