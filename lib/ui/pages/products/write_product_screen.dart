@@ -225,8 +225,10 @@ class WriteProductScreen extends ConsumerWidget {
                                     underline: SizedBox(),
                                     value: model.option.unit,
                                     elevation: 16,
-                                    onChanged: (v) => model.option =
-                                        model.option.copyWith(unit: v),
+                                    onChanged: (v) {
+                                      model.setOption(model.option.copyWith(unit: v));
+                                       
+                                    },
                                     items: Utils.units
                                         .map<DropdownMenuItem<String>>(
                                             (String value) {
@@ -297,6 +299,29 @@ class WriteProductScreen extends ConsumerWidget {
                         onChanged: (v) => model.popular = v!),
                     Text("Popular"),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: model.location,
+                    onChanged: (v) => model.location = v,
+                    onSaved: (v) => model.location = v!,
+                    validator: (value) =>
+                        value!.isEmpty ? "Enter Location" : null,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(labelText: "Location"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    initialValue: model.barcode,
+                    onChanged: (v) => model.barcode = v,
+                    onSaved: (v) => model.barcode = v!,
+                    validator: (value) => value!.isEmpty ? "Enter Barcode" : null,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(labelText: "Barcode"),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

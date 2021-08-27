@@ -75,7 +75,7 @@ class SubscriptionsPage extends ConsumerWidget {
             ),
             model.milkMan != null && model.area != null
                 ? Expanded(
-                                  child: Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
@@ -122,10 +122,12 @@ class SubscriptionsPage extends ConsumerWidget {
                                                   DataCell(Text(subscriptions
                                                       .indexOf(e)
                                                       .toString())),
-                                                  DataCell(Text(e.customerName)),
-                                                  DataCell(Text(e.address.number +
-                                                      ", " +
-                                                      e.address.landMark)),
+                                                  DataCell(
+                                                      Text(e.customerName)),
+                                                  DataCell(Text(
+                                                      e.address.number +
+                                                          ", " +
+                                                          e.address.landMark)),
                                                   DataCell(Text(
                                                       "${e.productName} (${e.option.amountLabel})")),
                                                   DataCell(Text(
@@ -148,9 +150,12 @@ class SubscriptionsPage extends ConsumerWidget {
                                   ),
                                 ),
                                 loading: () => Loading(),
-                                error: (e, s) => Text(
-                                  e.toString(),
-                                ),
+                                error: (e, s) {
+                                  print(e);
+                                  return Text(
+                                    e.toString(),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -160,7 +165,7 @@ class SubscriptionsPage extends ConsumerWidget {
                             : SizedBox()
                       ],
                     ),
-                )
+                  )
                 : SizedBox(),
           ],
         ),
@@ -185,28 +190,28 @@ class ScheduleView extends StatelessWidget {
       elevation: 2,
       color: theme.cardColor,
       child: SingleChildScrollView(
-          child: DataTable(
-            columns: [
-              DataColumn(label: Text('Date')),
-              DataColumn(label: Text('Quantity')),
-              DataColumn(label: Text('Price')),
-              DataColumn(label: Text('Status')),
-            ],
-            rows: subscription.deliveries
-      .map(
-        (e) => DataRow(
-          cells: [
-            DataCell(Text(Utils.formatedDate(e.date))),
-            DataCell(Text(e.quantity.toString())),
-            DataCell(Text(
-                "${Labels.rupee}${e.quantity * subscription.option.salePrice}")),
-            DataCell(Text(e.status)),
+        child: DataTable(
+          columns: [
+            DataColumn(label: Text('Date')),
+            DataColumn(label: Text('Quantity')),
+            DataColumn(label: Text('Price')),
+            DataColumn(label: Text('Status')),
           ],
+          rows: subscription.deliveries
+              .map(
+                (e) => DataRow(
+                  cells: [
+                    DataCell(Text(Utils.formatedDate(e.date))),
+                    DataCell(Text(e.quantity.toString())),
+                    DataCell(Text(
+                        "${Labels.rupee}${e.quantity * subscription.option.salePrice}")),
+                    DataCell(Text(e.status)),
+                  ],
+                ),
+              )
+              .toList(),
         ),
-      )
-      .toList(),
-          ),
-        ),
+      ),
     );
   }
 }

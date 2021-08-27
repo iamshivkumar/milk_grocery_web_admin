@@ -106,7 +106,33 @@ class ProductsScreen extends ConsumerWidget {
                                     ),
                                     DataCell(
                                       Icon(Icons.delete),
-                                      onTap: () {},
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                                "Are you sure you want to delete this product"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("NO"),
+                                              ),
+                                              MaterialButton(
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                onPressed: () {
+                                                  repository
+                                                      .deleteProduct(e.id);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("YES"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),

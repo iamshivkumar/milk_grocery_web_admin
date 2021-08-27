@@ -53,6 +53,10 @@ class Repository {
     }
   }
 
+  void deleteProduct(String id){
+      _firestore.collection("products").doc(id).delete();
+  }
+
   Future<String> _uploadImage(File file) async {
     return await (await _storage.ref(DateTime.now().toString()).putBlob(file))
         .ref

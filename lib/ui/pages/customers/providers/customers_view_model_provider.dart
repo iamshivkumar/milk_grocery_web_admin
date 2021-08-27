@@ -25,4 +25,18 @@ class CustomersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _mobile = '';
+  String get mobile => _mobile;
+  set mobile(String mobile) {
+    _mobile = mobile;
+    notifyListeners();
+  }
+
+  String _number = '';
+  String get number => _number;
+  set number(String number) {
+    _number = number;
+    notifyListeners();
+  }
+
 }

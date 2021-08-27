@@ -65,6 +65,19 @@ class WriteProductViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _location;
+  String get location => _location??_product.location;
+  set location(String location) {
+    _location = location;
+  }
+
+  String? _barcode;
+  String get barcode => _barcode??_product.barcode;
+  set barcode(String barcode) {
+    _barcode = barcode;
+  }
+
+
   List<Option> _options = [];
   List<Option> _removedOptions = [];
   List<Option> get options => (_options + _product.options)
@@ -89,6 +102,11 @@ class WriteProductViewModel extends ChangeNotifier {
 
   Option option = Option.empty();
 
+  void setOption(Option o){
+      option = o ;
+      notifyListeners();
+  }
+
   Future<void> writeProduct() async {
     loading = true;
     notifyListeners();
@@ -100,6 +118,8 @@ class WriteProductViewModel extends ChangeNotifier {
       popular: popular,
       options: options,
       quantity: quantity,
+      location: location,
+      barcode: barcode,
     );
     updated = updated.copyWith(
       images: _product.images

@@ -35,6 +35,9 @@ class CustomersPage extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DropdownButtonFormField<MilkMan>(
+                          decoration: InputDecoration(
+                            labelText: "Milk Man",
+                          ),
                           onChanged: (v) => model.milkMan = v,
                           value: model.milkMan,
                           items: milkMans
@@ -53,6 +56,9 @@ class CustomersPage extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            labelText: "Area",
+                          ),
                           onChanged: (v) => model.area = v,
                           value: model.area,
                           items: (model.areas ?? [])
@@ -63,6 +69,31 @@ class CustomersPage extends ConsumerWidget {
                                 ),
                               )
                               .toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          maxLength: 10,
+                          decoration: InputDecoration(
+                            labelText: "Mobile Number",
+                          ),
+                          onChanged: (v) => model.mobile = "+91$v",
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "House Number",
+                          ),
+                          onChanged: (v) => model.number = v,
                         ),
                       ),
                     ),
@@ -100,6 +131,10 @@ class CustomersPage extends ConsumerWidget {
                                   ],
                                   rows: customers
                                       .where((element) => element.ready)
+                                      .where((element) => element.mobile
+                                          .startsWith(model.mobile))
+                                      .where((element) => element.number!
+                                          .startsWith(model.number))
                                       .map(
                                         (e) => DataRow(
                                           cells: [
