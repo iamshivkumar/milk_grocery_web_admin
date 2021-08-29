@@ -31,18 +31,10 @@ class WriteProductViewModel extends ChangeNotifier {
     _name = name;
   }
 
-
-
   String? _description;
   String get description => _description ?? _product.description;
   set description(String description) {
     _description = description;
-  }
-
-  int? _quantity;
-  int get quantity => _quantity??_product.quantity;
-  set quantity(int quantity) {
-    _quantity = quantity;
   }
 
   String? _category;
@@ -64,19 +56,6 @@ class WriteProductViewModel extends ChangeNotifier {
     _popular = popular;
     notifyListeners();
   }
-
-  String? _location;
-  String get location => _location??_product.location;
-  set location(String location) {
-    _location = location;
-  }
-
-  String? _barcode;
-  String get barcode => _barcode??_product.barcode;
-  set barcode(String barcode) {
-    _barcode = barcode;
-  }
-
 
   List<Option> _options = [];
   List<Option> _removedOptions = [];
@@ -102,9 +81,9 @@ class WriteProductViewModel extends ChangeNotifier {
 
   Option option = Option.empty();
 
-  void setOption(Option o){
-      option = o ;
-      notifyListeners();
+  void setOption(Option o) {
+    option = o;
+    notifyListeners();
   }
 
   Future<void> writeProduct() async {
@@ -117,9 +96,6 @@ class WriteProductViewModel extends ChangeNotifier {
       category: category,
       popular: popular,
       options: options,
-      quantity: quantity,
-      location: location,
-      barcode: barcode,
     );
     updated = updated.copyWith(
       images: _product.images
@@ -131,7 +107,9 @@ class WriteProductViewModel extends ChangeNotifier {
         product: updated,
         images: _images,
         map: _map,
-        prevName: _product.id.isNotEmpty&& name!=_product.name?_product.name:null,
+        prevName: _product.id.isNotEmpty && name != _product.name
+            ? _product.name
+            : null,
       );
     } catch (e) {
       print(e);

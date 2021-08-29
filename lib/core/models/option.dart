@@ -6,11 +6,17 @@ class Option {
   final double price;
   final double salePrice;
   final String unit;
+  final String barcode;
+  final String location;
+  final int quantity;
   Option({
     required this.amount,
     required this.price,
     required this.salePrice,
     required this.unit,
+    required this.barcode,
+    required this.location,
+    required this.quantity,
   });
 
   Option copyWith({
@@ -18,12 +24,18 @@ class Option {
     double? price,
     double? salePrice,
     String? unit,
+    String? barcode,
+    String? location,
+    int? quantity,
   }) {
     return Option(
       amount: amount ?? this.amount,
       price: price ?? this.price,
       salePrice: salePrice ?? this.salePrice,
       unit: unit ?? this.unit,
+      barcode: barcode??this.barcode,
+      location: location??this.location,
+      quantity: quantity??this.quantity,
     );
   }
 
@@ -33,6 +45,9 @@ class Option {
       'price': price,
       'salePrice': salePrice,
       'unit': unit,
+      'barcode':barcode,
+      'location':location,
+      'quantity':quantity
     };
   }
 
@@ -46,6 +61,9 @@ class Option {
       price: map['price'],
       salePrice: map['salePrice'],
       unit: map['unit'],
+      barcode: map['barcode'],
+      location: map['location'],
+      quantity: map['quantity'],
     );
   }
   factory Option.empty() {
@@ -54,6 +72,9 @@ class Option {
       price: 0,
       salePrice: 0,
       unit: Utils.units.first,
+      barcode: '',
+      location: '',
+      quantity: 0,
     );
   }
 }

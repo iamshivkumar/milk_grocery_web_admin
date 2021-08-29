@@ -10,9 +10,7 @@ class Product {
   final String? category;
   final bool active;
   final bool popular;
-  final int quantity;
-  final String location;
-  final String barcode;
+
 
   Product({
     required this.id,
@@ -23,9 +21,7 @@ class Product {
     required this.category,
     required this.popular,
     required this.options,
-    required this.quantity,
-    required this.location,
-    required this.barcode,
+
   });
 
   Product copyWith({
@@ -50,9 +46,7 @@ class Product {
       category: category ?? this.category,
       popular: popular ?? this.popular,
       options: options ?? this.options,
-      quantity: quantity ?? this.quantity,
-      location: location?? this.location,
-      barcode: barcode??this.barcode,
+
     );
   }
 
@@ -65,9 +59,6 @@ class Product {
       'active': active,
       'popular': popular,
       'options': options.map((e) => e.toMap()).toList(),
-      'quantity': quantity,
-      'location':location,
-      'barcode':barcode
     };
   }
 
@@ -83,9 +74,6 @@ class Product {
       category: map['category'],
       popular: map['popular'],
       options: list.map((e) => Option.fromMap(e)).toList(),
-      quantity: map['quantity'],
-      location: map['location'],
-      barcode: map['barcode'],
     );
   }
 
@@ -98,8 +86,5 @@ class Product {
         category: null,
         popular: false,
         options: [],
-        quantity: 0,
-        location: '',
-        barcode: '',
       );
 }

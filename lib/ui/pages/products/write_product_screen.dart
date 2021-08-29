@@ -226,8 +226,8 @@ class WriteProductScreen extends ConsumerWidget {
                                     value: model.option.unit,
                                     elevation: 16,
                                     onChanged: (v) {
-                                      model.setOption(model.option.copyWith(unit: v));
-                                       
+                                      model.setOption(
+                                          model.option.copyWith(unit: v));
                                     },
                                     items: Utils.units
                                         .map<DropdownMenuItem<String>>(
@@ -240,6 +240,50 @@ class WriteProductScreen extends ConsumerWidget {
                                   ),
                                 ),
                               ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.quantity.toString(),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Quantity" : null,
+                              onSaved: (v) => model.option = model.option
+                                  .copyWith(quantity: int.parse(v!)),
+                              onChanged: (v) => model.option =
+                                  model.option.copyWith(quantity: int.parse(v)),
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  InputDecoration(labelText: "Quantity"),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.barcode.toString(),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Barcode" : null,
+                              onSaved: (v) => model.option =
+                                  model.option.copyWith(barcode: v!),
+                              onChanged: (v) => model.option =
+                                  model.option.copyWith(barcode: v),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(labelText: "Barcode"),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: TextFormField(
+                              initialValue: model.option.location.toString(),
+                              validator: (value) =>
+                                  value!.isEmpty ? "Enter Location" : null,
+                              onSaved: (v) => model.option =
+                                  model.option.copyWith(location: v!),
+                              onChanged: (v) => model.option =
+                                  model.option.copyWith(location: v),
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  InputDecoration(labelText: "Location"),
                             ),
                           ),
                           Padding(
@@ -273,18 +317,6 @@ class WriteProductScreen extends ConsumerWidget {
                     decoration: InputDecoration(labelText: "About Product"),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    initialValue: model.quantity.toString(),
-                    validator: (value) =>
-                        value!.isEmpty ? "Enter Quantity" : null,
-                    onSaved: (v) => model.quantity = int.parse(v!),
-                    onChanged: (v) => model.quantity = int.parse(v),
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(labelText: "Quantity"),
-                  ),
-                ),
                 Row(
                   children: [
                     Checkbox(
@@ -299,29 +331,6 @@ class WriteProductScreen extends ConsumerWidget {
                         onChanged: (v) => model.popular = v!),
                     Text("Popular"),
                   ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    initialValue: model.location,
-                    onChanged: (v) => model.location = v,
-                    onSaved: (v) => model.location = v!,
-                    validator: (value) =>
-                        value!.isEmpty ? "Enter Location" : null,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(labelText: "Location"),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    initialValue: model.barcode,
-                    onChanged: (v) => model.barcode = v,
-                    onSaved: (v) => model.barcode = v!,
-                    validator: (value) => value!.isEmpty ? "Enter Barcode" : null,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(labelText: "Barcode"),
-                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

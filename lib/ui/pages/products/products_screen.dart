@@ -94,7 +94,7 @@ class ProductsScreen extends ConsumerWidget {
                                     ),
                                     DataCell(
                                       Text(
-                                        e.quantity.toString(),
+                                        '',
                                       ),
                                     ),
                                     DataCell(
