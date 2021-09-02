@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grocery_web_admin/core/models/write_option_param.dart';
 import 'package:grocery_web_admin/ui/pages/categories/providers/categories_provider.dart';
 import 'package:grocery_web_admin/ui/pages/products/providers/selected_product_provider.dart';
 import 'package:grocery_web_admin/utils/labels.dart';
@@ -7,13 +8,13 @@ import 'package:grocery_web_admin/utils/utils.dart';
 
 import 'providers/write_mode_state_provider.dart';
 import 'providers/write_product_view_model_provider.dart';
+import 'widgets/write_option_view.dart';
 
 class WriteProductScreen extends ConsumerWidget {
   WriteProductScreen({
     Key? key,
   }) : super(key: key);
   final _formKey = GlobalKey<FormState>();
-  final _formKey2 = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final writeMode = context.read(writeModeStateProvider);
@@ -137,172 +138,64 @@ class WriteProductScreen extends ConsumerWidget {
                   child: Column(
                       children: model.options
                           .map(
-                            (e) => Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Text(
-                                    Labels.rupee + e.price.toString(),
-                                    style: TextStyle(
-                                        decoration: TextDecoration.lineThrough),
+                            (e) => InkWell(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => WritePurchaseSlabDialog(
+                                    param: WriteOptionParam(
+                                      list: model.options,
+                                      prevOption: e,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Text(
-                                      Labels.rupee + e.salePrice.toString()),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Text(e.amount + " " + e.unit),
-                                ),
-                                Spacer(),
-                                IconButton(
-                                  icon: Icon(Icons.remove),
-                                  onPressed: () {
-                                    model.removeOption(e);
-                                  },
-                                )
-                              ],
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Text(
+                                      Labels.rupee + e.price.toString(),
+                                      style: TextStyle(
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Text(
+                                        Labels.rupee + e.salePrice.toString()),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Text(e.amount + " " + e.unit),
+                                  ),
+                                  Spacer(),
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: () {
+                                      model.removeOption(e);
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                           )
                           .toList()),
                 ),
-                Material(
-                  color: theme.primaryColorLight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Form(
-                      key: _formKey2,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.price.toString(),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Price" : null,
-                              onSaved: (v) => model.option = model.option
-                                  .copyWith(price: double.parse(v!)),
-                              onChanged: (v) => model.option =
-                                  model.option.copyWith(price: double.parse(v)),
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(labelText: "Price"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.salePrice.toString(),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Sale Price" : null,
-                              onSaved: (v) => model.option = model.option
-                                  .copyWith(salePrice: double.parse(v!)),
-                              onChanged: (v) => model.option = model.option
-                                  .copyWith(salePrice: double.parse(v)),
-                              keyboardType: TextInputType.number,
-                              decoration:
-                                  InputDecoration(labelText: "Sale Price"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.amount,
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Amount" : null,
-                              onSaved: (v) => model.option =
-                                  model.option.copyWith(amount: v!),
-                              onChanged: (v) => model.option =
-                                  model.option.copyWith(amount: v),
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: "Amount",
-                                suffix: SizedBox(
-                                  height: 20,
-                                  child: DropdownButton<String>(
-                                    underline: SizedBox(),
-                                    value: model.option.unit,
-                                    elevation: 16,
-                                    onChanged: (v) {
-                                      model.setOption(
-                                          model.option.copyWith(unit: v));
-                                    },
-                                    items: Utils.units
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.quantity.toString(),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Quantity" : null,
-                              onSaved: (v) => model.option = model.option
-                                  .copyWith(quantity: int.parse(v!)),
-                              onChanged: (v) => model.option =
-                                  model.option.copyWith(quantity: int.parse(v)),
-                              keyboardType: TextInputType.number,
-                              decoration:
-                                  InputDecoration(labelText: "Quantity"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.barcode.toString(),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Barcode" : null,
-                              onSaved: (v) => model.option =
-                                  model.option.copyWith(barcode: v!),
-                              onChanged: (v) => model.option =
-                                  model.option.copyWith(barcode: v),
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(labelText: "Barcode"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: TextFormField(
-                              initialValue: model.option.location.toString(),
-                              validator: (value) =>
-                                  value!.isEmpty ? "Enter Location" : null,
-                              onSaved: (v) => model.option =
-                                  model.option.copyWith(location: v!),
-                              onChanged: (v) => model.option =
-                                  model.option.copyWith(location: v),
-                              keyboardType: TextInputType.number,
-                              decoration:
-                                  InputDecoration(labelText: "Location"),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: MaterialButton(
-                              child: Text("ADD OPTION"),
-                              color: theme.primaryColor,
-                              onPressed: () {
-                                if (_formKey2.currentState!.validate()) {
-                                  _formKey2.currentState!.save();
-                                  model.addOption();
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                TextButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => WritePurchaseSlabDialog(
+                        param: WriteOptionParam(
+                          list: model.options,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  child: Text("ADD OPTION"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

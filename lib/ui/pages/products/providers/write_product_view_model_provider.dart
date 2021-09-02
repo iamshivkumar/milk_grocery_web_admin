@@ -57,25 +57,21 @@ class WriteProductViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Option> _options = [];
+  List<Option>? _options;
   List<Option> _removedOptions = [];
-  List<Option> get options => (_options + _product.options)
-      .where((element) => !_removedOptions.contains(element))
-      .toList();
+  List<Option> get options =>
+      (_options ??
+      _product.options)
+          .where((element) => !_removedOptions.contains(element))
+          .toList();
 
-  void removeOption(Option option) {
-    if (_options.contains(option)) {
-      _options.remove(option);
-    } else {
-      _removedOptions.add(option);
-    }
+  void setOptions(List<Option> os) {
+    _options = os;
     notifyListeners();
   }
 
-  void addOption() {
-    if (!options.contains(option)) {
-      _options.add(option);
-    }
+  void removeOption(Option option) {
+    _removedOptions.add(option);
     notifyListeners();
   }
 

@@ -13,7 +13,6 @@ class ProductView extends ConsumerWidget {
     final theme = Theme.of(context);
     final style = theme.textTheme;
     final model = watch(abcValueProvider);
-
     final selectedProduct = watch(selectedProductProvider);
     final productsAsync = watch(productsProvider(model.state));
     return Container(
@@ -55,38 +54,57 @@ class ProductView extends ConsumerWidget {
                   ),
                 ] +
                 product.options
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Row(
+                    .map(
+                      (e) => Card(
+                        color: theme.primaryColorLight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Text(
-                                  Labels.rupee + e.price.toString(),
-                                  style: style.headline6!.copyWith(
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      e.amount + " " + e.unit,
+                                      style: style.headline6,
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      Labels.rupee + e.price.toString(),
+                                      style: style.subtitle1!.copyWith(
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      Labels.rupee + e.salePrice.toString(),
+                                      style: style.subtitle1,
+                                    ),
+                                    Spacer(),
+                                    Text(e.quantity.toString())
+                                  ],
                                 ),
                               ),
-                              Spacer(),
                               Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Text(
-                                  Labels.rupee + e.salePrice.toString(),
-                                  style: style.headline6,
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.document_scanner),
+                                    SizedBox(width: 8),
+                                    Text(e.barcode),
+                                    Spacer(),
+                                    Icon(Icons.location_pin),
+                                    SizedBox(width: 8),
+                                    Text(e.location),
+                                  ],
                                 ),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Text(
-                                  e.amount + " " + e.unit,
-                                  style: style.headline6,
-                                ),
-                              ),
+                              )
                             ],
                           ),
-                        ))
+                        ),
+                      ),
+                    )
                     .toList(),
           );
         },

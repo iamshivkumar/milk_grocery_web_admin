@@ -54,7 +54,6 @@ class ProductsScreen extends ConsumerWidget {
                             DataColumn(label: Text('Category')),
                             DataColumn(label: Text('Images')),
                             DataColumn(label: Text('Popular')),
-                            DataColumn(label: Text('Quantity')),
                             DataColumn(label: Text('Active')),
                             DataColumn(label: Text('Action')),
                           ],
@@ -92,11 +91,8 @@ class ProductsScreen extends ConsumerWidget {
                                             repository.updatedPopular(e.id, v),
                                       ),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        '',
-                                      ),
-                                    ),
+                                    
+                                    
                                     DataCell(
                                       Switch(
                                         value: e.active,
