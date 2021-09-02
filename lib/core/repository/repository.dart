@@ -8,6 +8,8 @@ import 'package:grocery_web_admin/core/models/banner.dart';
 import 'package:grocery_web_admin/core/models/category.dart';
 import 'package:grocery_web_admin/core/models/charge.dart';
 import 'package:grocery_web_admin/core/models/customer.dart';
+import 'package:grocery_web_admin/core/models/master_data.dart';
+import 'package:grocery_web_admin/core/models/offer.dart';
 import 'package:grocery_web_admin/core/models/order.dart';
 import 'package:grocery_web_admin/core/models/params.dart';
 import 'package:grocery_web_admin/core/models/milk_man.dart';
@@ -53,8 +55,8 @@ class Repository {
     }
   }
 
-  void deleteProduct(String id){
-      _firestore.collection("products").doc(id).delete();
+  void deleteProduct(String id) {
+    _firestore.collection("products").doc(id).delete();
   }
 
   Future<String> _uploadImage(File file) async {
@@ -286,5 +288,16 @@ class Repository {
       ).toMap(),
     );
     batch.commit();
+  }
+
+  Stream<Masterdata> get masterdataStream =>
+      _firestore.collection('masterData').doc('masterData_v1').snapshots().map(
+            (event) => Masterdata.fromMap(event),
+          );
+
+  void writeOffer(List<Offer> offers){
+    _firestore.collection('masterData').doc('masterData_v1').update({
+      "offers": offers.map((e) => e.toMap()).toList()
+    });
   }
 }

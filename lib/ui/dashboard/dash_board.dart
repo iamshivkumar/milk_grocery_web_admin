@@ -4,6 +4,7 @@ import 'package:grocery_web_admin/ui/pages/banners/banners_page.dart';
 import 'package:grocery_web_admin/ui/pages/categories/categories_page.dart';
 import 'package:grocery_web_admin/ui/pages/customers/customers_page.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/milk_mans_page.dart';
+import 'package:grocery_web_admin/ui/pages/offers/offers_page.dart';
 import 'package:grocery_web_admin/ui/pages/orders/orders_page.dart';
 import 'package:grocery_web_admin/ui/pages/orders/subscriptions_page.dart';
 import 'package:grocery_web_admin/ui/pages/products/products_screen.dart';
@@ -27,6 +28,7 @@ class Dashboard extends ConsumerWidget {
             CustomersPage(),
             OrdersPage(),
             SubscriptionsPage(),
+            OffersPage(),
           ][index.state],
         ),
       ],

@@ -18,6 +18,7 @@ class MyDrawer extends ConsumerWidget {
     Menu(Icons.group, "Customers"),
     Menu(Icons.shopping_bag, "Orders"),
     Menu(Icons.subscriptions, "Subscriptions"),
+    Menu(Icons.local_offer, "Offers"),
   ];
 
   @override
