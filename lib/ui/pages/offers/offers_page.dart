@@ -15,7 +15,16 @@ class OffersPage extends ConsumerWidget {
         title: Text("Offers"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => WriteOfferDialog(
+              params: WriteOfferParam(
+                offers: masterDataStream.data?.value.offers ?? [],
+              ),
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
       body: Row(
@@ -24,28 +33,28 @@ class OffersPage extends ConsumerWidget {
           SizedBox(
             width: 400,
             child: masterDataStream.when(
-              data: (data) => Card(
-                child: ListView(
-                  children: data.offers
-                      .map(
-                        (e) => ListTile(
-                          onTap: (){
+              data: (data) => ListView(
+                children: data.offers
+                    .map(
+                      (e) => Card(
+                        child: ListTile(
+                          onTap: () {
                             showDialog(
-                                  context: context,
-                                  builder: (context) => WriteOfferDialog(
-                                    params: WriteOfferParam(
-                                      offers: data.offers,
-                                      prevOffer: e,
-                                    ),
-                                  ),
-                                );
+                              context: context,
+                              builder: (context) => WriteOfferDialog(
+                                params: WriteOfferParam(
+                                  offers: data.offers,
+                                  prevOffer: e,
+                                ),
+                              ),
+                            );
                           },
                           title: Text(Labels.rupee + e.amount.toString()),
                           trailing: Text(e.percentage.toString() + "\%"),
                         ),
-                      )
-                      .toList(),
-                ),
+                      ),
+                    )
+                    .toList(),
               ),
               loading: () => Loading(),
               error: (e, s) => Text(

@@ -300,4 +300,10 @@ class Repository {
       "offers": offers.map((e) => e.toMap()).toList()
     });
   }
+
+  void updateStatus(bool value){
+    _firestore.collection('masterData').doc('masterData_v1').update({
+      "active": value,
+    });
+  }
 }
