@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_web_admin/ui/pages/banners/banners_page.dart';
 import 'package:grocery_web_admin/ui/pages/categories/categories_page.dart';
+import 'package:grocery_web_admin/ui/pages/charges/charges_page.dart';
 import 'package:grocery_web_admin/ui/pages/customers/customers_page.dart';
+import 'package:grocery_web_admin/ui/pages/low_stock_notice/low_stock_notice_page.dart';
 import 'package:grocery_web_admin/ui/pages/milk_mans/milk_mans_page.dart';
 import 'package:grocery_web_admin/ui/pages/offers/offers_page.dart';
 import 'package:grocery_web_admin/ui/pages/orders/orders_page.dart';
@@ -31,6 +33,8 @@ class Dashboard extends ConsumerWidget {
             SubscriptionsPage(),
             OffersPage(),
             SettingsPage(),
+            LowStackNoticePage(),
+            ChargesPage(),
           ][index.state],
         ),
       ],

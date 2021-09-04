@@ -52,10 +52,11 @@ class SubscriptionsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 300,
+                      width: 500,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DropdownButtonFormField<String>(
+                          isExpanded: true,
                           onChanged: (v) => model.area = v,
                           value: model.area,
                           items: (model.areas ?? [])

@@ -20,6 +20,8 @@ class MyDrawer extends ConsumerWidget {
     Menu(Icons.subscriptions, "Subscriptions"),
     Menu(Icons.local_offer, "Offers"),
     Menu(Icons.settings, "Settings"),
+    Menu(Icons.warning, "Low Stock Notice"),
+    Menu(Icons.account_balance_wallet, "Charges History"),
   ];
 
   @override

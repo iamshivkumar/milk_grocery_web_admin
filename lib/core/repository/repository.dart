@@ -295,15 +295,50 @@ class Repository {
             (event) => Masterdata.fromMap(event),
           );
 
-  void writeOffer(List<Offer> offers){
-    _firestore.collection('masterData').doc('masterData_v1').update({
-      "offers": offers.map((e) => e.toMap()).toList()
-    });
+  void writeOffer(List<Offer> offers) {
+    _firestore
+        .collection('masterData')
+        .doc('masterData_v1')
+        .update({"offers": offers.map((e) => e.toMap()).toList()});
   }
 
-  void updateStatus(bool value){
+  void updateStatus(bool value) {
     _firestore.collection('masterData').doc('masterData_v1').update({
       "active": value,
     });
+  }
+
+  Stream<List<String>> get lowStockNoticesStream =>
+      _firestore.collection('stockNotice').doc('stockNotice').snapshots().map(
+        (event) {
+          final Iterable list = event.data()!['values'];
+          return list.cast<String>().toList();
+        },
+      );
+
+  void removeLowCostNotice(String value) {
+    _firestore.collection('stockNotice').doc('stockNotice').update({
+      "values": FieldValue.arrayRemove([value])
+    });
+  }
+
+  Future<List<Charge>> chargesFuture(DateTime date) async {
+    return _firestore
+        .collection('charges')
+        
+        .where(
+          "createdAt",
+          isGreaterThanOrEqualTo: date,
+          isLessThanOrEqualTo: date.add(
+            Duration(hours: 23, minutes: 59),
+          ),
+        )
+        
+        .get()
+        .then((value) => value.docs
+            .map(
+              (e) => Charge.fromFirestore(e),
+            )
+            .toList());
   }
 }
