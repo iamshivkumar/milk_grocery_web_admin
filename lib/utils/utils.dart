@@ -2,22 +2,12 @@
 import 'package:intl/intl.dart';
 
 class Utils {
-  static List<String> get categories => [
-    'Popular',
-    'Fruits',
-    "Vegetables",
-    'Food',
-    'Drinks',
-    'Snacks'
-  ];
-    static List<String> get writeCategories => [
-    'Fruits',
-    "Vegetables",
-    'Food',
-    'Drinks',
-    'Snacks'
-  ];
-  static List<String> get  units => ['Kg', "Gram", "Litre", "ML", 'PCS', 'Dozen'];
+  static List<String> get categories =>
+      ['Popular', 'Fruits', "Vegetables", 'Food', 'Drinks', 'Snacks'];
+  static List<String> get writeCategories =>
+      ['Fruits', "Vegetables", 'Food', 'Drinks', 'Snacks'];
+  static List<String> get units =>
+      ['Kg', "Gram", "Litre", "ML", 'PCS', 'Dozen'];
 
   // static String formatedAddress(Placemark placemark) {
   //   return "${placemark.name}, ${placemark.street}, ${placemark.subLocality}, ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea}, ${placemark.country}, ${placemark.postalCode}.";
@@ -51,4 +41,11 @@ class Utils {
 
   static String formatedDate(DateTime dateTime) =>
       DateFormat(DateFormat.MONTH_DAY).format(dateTime);
+
+  static String formatedTime(DateTime dateTime) =>
+      DateFormat(DateFormat.HOUR_MINUTE).format(dateTime);
+  
+
+    static String formatedDateTime(DateTime dateTime) =>
+      DateFormat(DateFormat.HOUR_MINUTE).format(dateTime)+", "+formatedDate(dateTime);
 }

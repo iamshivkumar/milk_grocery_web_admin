@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:grocery_web_admin/utils/labels.dart';
 
-class Tranzaction {
+class Tranzactions {
   final String id;
   final double amount;
   final String name;
@@ -10,7 +10,7 @@ class Tranzaction {
   final String type;
   final String? paymentId;
 
-  Tranzaction({
+  Tranzactions({
     required this.amount,
     required this.name,
     required this.uid,
@@ -22,7 +22,7 @@ class Tranzaction {
 
   String get amountLabel => "${Labels.rupee}$amount";
 
-  Tranzaction copyWith({
+  Tranzactions copyWith({
     double? amount,
     String? name,
     String? uid,
@@ -30,7 +30,7 @@ class Tranzaction {
     String? type,
     String? paymentId,
   }) {
-    return Tranzaction(
+    return Tranzactions(
       amount: amount ?? this.amount,
       name: name ?? this.name,
       uid: uid ?? this.uid,
@@ -52,9 +52,9 @@ class Tranzaction {
     };
   }
 
-  factory Tranzaction.fromFirestore(DocumentSnapshot doc) {
+  factory Tranzactions.fromFirestore(DocumentSnapshot doc) {
     final Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
-    return Tranzaction(
+    return Tranzactions(
       amount: map['amount'],
       name: map['name'],
       uid: map['uid'],

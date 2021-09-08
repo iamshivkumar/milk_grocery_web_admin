@@ -8,7 +8,7 @@ class Option {
   final String unit;
   final String barcode;
   final String location;
-  final int quantity;
+   int quantity;
   Option({
     required this.amount,
     required this.price,
@@ -76,5 +76,9 @@ class Option {
       location: '',
       quantity: 0,
     );
+  }
+
+    void increment(int value){
+     quantity = quantity + value;
   }
 }

@@ -11,11 +11,14 @@ import 'package:grocery_web_admin/core/models/customer.dart';
 import 'package:grocery_web_admin/core/models/master_data.dart';
 import 'package:grocery_web_admin/core/models/offer.dart';
 import 'package:grocery_web_admin/core/models/order.dart';
+import 'package:grocery_web_admin/core/models/order_product.dart';
 import 'package:grocery_web_admin/core/models/params.dart';
 import 'package:grocery_web_admin/core/models/milk_man.dart';
 import 'package:grocery_web_admin/core/models/params_with_date.dart';
 import 'package:grocery_web_admin/core/models/product.dart';
 import 'package:grocery_web_admin/core/models/subscription.dart';
+import 'package:grocery_web_admin/core/models/tranz_params.dart';
+import 'package:grocery_web_admin/core/models/tranzaction.dart';
 import 'package:grocery_web_admin/utils/dates.dart';
 
 final repositoryProvider = Provider((ref) => Repository(ref));
@@ -325,7 +328,6 @@ class Repository {
   Future<List<Charge>> chargesFuture(DateTime date) async {
     return _firestore
         .collection('charges')
-        
         .where(
           "createdAt",
           isGreaterThanOrEqualTo: date,
@@ -333,12 +335,69 @@ class Repository {
             Duration(hours: 23, minutes: 59),
           ),
         )
-        
         .get()
         .then((value) => value.docs
             .map(
               (e) => Charge.fromFirestore(e),
             )
             .toList());
+  }
+
+  Future<List<Tranzactions>> tranzactionsFuture(TranzParam params) async {
+    return _firestore
+        .collection('tranzactions')
+        .orderBy('createdAt', descending: true)
+        .where(
+          "createdAt",
+          isGreaterThanOrEqualTo: params.start,
+          isLessThanOrEqualTo: params.end.add(
+            Duration(hours: 23, minutes: 59),
+          ),
+        )
+        .get()
+        .then((value) => value.docs
+            .map(
+              (e) => Tranzactions.fromFirestore(e),
+            )
+            .toList());
+  }
+
+  void cancelOrder(
+      {required double price,
+      required String orderId,
+      required List<OrderProduct> orderProducts,
+      required String id,required String reason}) {
+    final batch = _firestore.batch();
+    batch.update(_firestore.collection('orders').doc(orderId), {
+      'status': "Cancelled",
+      'refundReason':  reason,
+    });
+    batch.update(_firestore.collection('users').doc(id), {
+      'walletAmount': FieldValue.increment(price),
+    });
+    batch.set(
+      _firestore.collection('charges').doc(),
+      Charge(
+        amount: price,
+        from: null,
+        to: id,
+        ids: [id],
+        type: ChargesType.whileCancelOrder,
+        createdAt: DateTime.now(),
+      ).toMap(),
+    );
+    for (var item in orderProducts.where((element) => !element.isMilky)) {
+      _firestore.collection('products').doc(item.id).get().then((value) {
+        final product = Product.fromFirestore(value);
+        product.options
+            .where((element) => element.amountLabel == item.amountLabel)
+            .first
+            .increment(item.qt);
+        _firestore.collection('products').doc(item.id).update({
+          'options': product.options.map((e) => e.toMap()).toList(),
+        });
+      });
+    }
+    batch.commit();
   }
 }

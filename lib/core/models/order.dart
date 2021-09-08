@@ -9,14 +9,13 @@ class Order {
   final String customerId;
   final String customerName;
   final String customerMobile;
-    final String orderId;
-
+  final String orderId;
 
   final double price;
   final double walletAmount;
   final double total;
   final String status;
-  
+
   final List<OrderProduct> products;
   final int items;
   final String? milkManId;
@@ -48,34 +47,29 @@ class Order {
     required this.orderId,
   });
 
-
-
-
-
   factory Order.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> map = doc.data() as Map<String, dynamic>;
     return Order(
-      id: doc.id,
-      customerId: map['customerId'],
-      customerName: map['customerName'],
-      customerMobile: map['customerMobile'],
-      price: map['price'],
-      walletAmount: map['walletAmount'],
-      status: map['status'],
-      products: List<OrderProduct>.from(
-        map['products'].map(
-          (x) => OrderProduct.fromMap(x),
+        id: doc.id,
+        customerId: map['customerId'],
+        customerName: map['customerName'],
+        customerMobile: map['customerMobile'],
+        price: map['price'],
+        walletAmount: map['walletAmount'],
+        status: map['status'],
+        products: List<OrderProduct>.from(
+          map['products'].map(
+            (x) => OrderProduct.fromMap(x),
+          ),
         ),
-      ),
-      items: map['items'],
-      milkManId: map['milkManId'],
-      paymentMethod: map['paymentMethod'],
-      paid: map['paid'],
-      paymentId: map['paymentId'],
-      createdOn: map['createdOn'].toDate(),
-      total: map['total'],
-      address: DeliveryAddress.fromMap(map['address']),
-      orderId: map['orderId']
-    );
+        items: map['items'],
+        milkManId: map['milkManId'],
+        paymentMethod: map['paymentMethod'],
+        paid: map['paid'],
+        paymentId: map['paymentId'],
+        createdOn: map['createdOn'].toDate(),
+        total: map['total'],
+        address: DeliveryAddress.fromMap(map['address']),
+        orderId: map['orderId']);
   }
 }

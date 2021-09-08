@@ -9,6 +9,7 @@ import 'package:grocery_web_admin/ui/pages/milk_mans/providers/milk_mans_provide
 import 'package:grocery_web_admin/ui/pages/orders/providers/orders_provider.dart';
 import 'package:grocery_web_admin/ui/pages/orders/providers/orders_view_model_provider.dart';
 import 'package:grocery_web_admin/ui/pages/orders/providers/subscriptions_provider.dart';
+import 'package:grocery_web_admin/ui/pages/orders/widgets/cancel_dialog.dart';
 import 'package:grocery_web_admin/ui/widgets/loading.dart';
 import 'package:grocery_web_admin/utils/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -155,7 +156,13 @@ class OrdersPage extends ConsumerWidget {
                               DataCell(Text(order.price)),
                               DataCell(Text(order.walletAmount)),
                               DataCell(Text(order.total)),
-                              DataCell(Text(order.status)),
+                              DataCell(
+                                Text(order.status),
+                                showEditIcon: order.model is Order&&order.status=="Pending"? true:false,
+                                onTap: order.model is Order&&order.status=="Pending"? (){
+                                  showDialog(context: context, builder: (context)=>CancelDialog(order: order.model,));
+                                }:null
+                              ),
                             ], color: MaterialStateProperty.all(color)),
                           );
                           for (var product in order.products.skip(1)) {

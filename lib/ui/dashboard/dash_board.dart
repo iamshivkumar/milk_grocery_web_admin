@@ -11,6 +11,7 @@ import 'package:grocery_web_admin/ui/pages/orders/orders_page.dart';
 import 'package:grocery_web_admin/ui/pages/orders/subscriptions_page.dart';
 import 'package:grocery_web_admin/ui/pages/products/products_screen.dart';
 import 'package:grocery_web_admin/ui/pages/settings/settings_page.dart';
+import 'package:grocery_web_admin/ui/pages/tranzactions/tranzactions_page.dart';
 
 import 'providers/index_provider.dart';
 import 'widgets/my_drawer.dart';
@@ -35,6 +36,7 @@ class Dashboard extends ConsumerWidget {
             SettingsPage(),
             LowStackNoticePage(),
             ChargesPage(),
+            TranzactionsPage(),
           ][index.state],
         ),
       ],

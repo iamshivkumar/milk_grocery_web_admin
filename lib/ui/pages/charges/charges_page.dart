@@ -79,6 +79,7 @@ class ChargesPage extends HookWidget {
                               ),
                             ),
                             subtitle: Text(e.type),
+                            trailing: Text(Utils.formatedTime(e.createdAt)),
                           ),
                         ),
                       )
