@@ -343,7 +343,7 @@ class Repository {
             .toList());
   }
 
-  Future<List<Tranzactions>> tranzactionsFuture(TranzParam params) async {
+  Future<List<Tranzactions>> tranzactionsFuture(RangeParam params) async {
     return _firestore
         .collection('tranzactions')
         .orderBy('createdAt', descending: true)
@@ -399,5 +399,29 @@ class Repository {
       });
     }
     batch.commit();
+  }
+
+  Stream<List<Order>> rangeOrders(RangeParam params){
+
+    return _firestore
+        .collection('orders')
+        .where(
+          'createdOn',
+          isGreaterThanOrEqualTo: params.start.add(Duration(days: 1)),
+          isLessThanOrEqualTo: params.end.add(
+            Duration(hours: 23, minutes: 59,days: 1),
+          ),
+        )
+        .snapshots()
+        .map(
+      (event) {
+        print(event.docs);
+        return event.docs
+            .map(
+              (e) => Order.fromFirestore(e),
+            )
+            .toList();
+      },
+    );
   }
 }

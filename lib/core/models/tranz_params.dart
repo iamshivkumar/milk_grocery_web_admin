@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class TranzParam extends Equatable{
+class RangeParam extends Equatable{
   final DateTime start;
   final DateTime end;
 
-  TranzParam(this.start, this.end);
+  RangeParam(this.start, this.end);
 
   @override
 

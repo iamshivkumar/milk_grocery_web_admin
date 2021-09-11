@@ -13,17 +13,16 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:intl/intl.dart';
 
-class TranzactionsPage extends HookWidget {
+import 'widgets/range_filterer.dart';
+
+class TranzactionsPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final dateRange = useProvider(dateRangeProvider);
-    final controller1 =
-        useTextEditingController(text: Utils.formatedDate(dateRange.start));
-    final controller2 =
-        useTextEditingController(text: Utils.formatedDate(dateRange.end));
-    final chargesFuture = useProvider(
+  Widget build(BuildContext context,ScopedReader watch) {
+    final dateRange = watch(dateRangeProvider);
+
+    final chargesFuture = watch(
       tranzactionsProvider(
-        TranzParam(dateRange.start, dateRange.end),
+        RangeParam(dateRange.start, dateRange.end),
       ),
     );
     final theme = Theme.of(context);
@@ -34,72 +33,8 @@ class TranzactionsPage extends HookWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-          Material(
-            elevation: 4,
-            color: theme.cardColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 200,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: "Start Date",
-                        ),
-                        controller: controller1,
-                        readOnly: true,
-                        onTap: () async {
-                          final DateTime? dateTime = await showDatePicker(
-                            context: context,
-                            initialDate: dateRange.start,
-                            firstDate: DateTime(2021),
-                            lastDate: Dates.today,
-                          );
-                          if (dateTime != null) {
-                            dateRange.start = dateTime;
-                            controller1.text =
-                                Utils.formatedDate(dateRange.start);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 200,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: "End Date",
-                        ),
-                        controller: controller2,
-                        readOnly: true,
-                        onTap: () async {
-                          final DateTime? dateTime = await showDatePicker(
-                            context: context,
-                            initialDate: dateRange.end,
-                            firstDate: DateTime(2021),
-                            lastDate: Dates.today,
-                          );
-                          if (dateTime != null) {
-                            dateRange.end = dateTime;
-                            controller2.text =
-                                Utils.formatedDate(dateRange.end);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          RangleFilterer(dateRange: dateRange),
           Expanded(
             child: Row(
               children: [
@@ -192,7 +127,6 @@ class TranzactionsPage extends HookWidget {
                   ),
                 ),
                 Expanded(
-
                   child: ListView(
                     children: [
                       AspectRatio(
@@ -206,7 +140,7 @@ class TranzactionsPage extends HookWidget {
                             series: <ChartSeries>[
                               LineSeries<Tranzactions, DateTime>(
                                 color: Colors.green,
-                                dataSource: chargesFuture.data?.value??[],
+                                dataSource: chargesFuture.data?.value ?? [],
                                 xValueMapper: (v, _) => v.createdAt,
                                 yValueMapper: (v, _) => v.amount,
                               )
@@ -225,15 +159,19 @@ class TranzactionsPage extends HookWidget {
                             series: <ChartSeries>[
                               LineSeries<Tranzactions, DateTime>(
                                 color: Colors.green,
-                                dataSource: chargesFuture.data?.value??[],
+                                dataSource: chargesFuture.data?.value ?? [],
                                 xValueMapper: (v, _) => v.createdAt,
-                                yValueMapper: (v, _){
-                                  final list = (chargesFuture.data?.value??[]);
-                                  final sub = list.sublist(list.indexOf(v)).map((e) => e.amount);
-                                  if(sub.isEmpty){
+                                yValueMapper: (v, _) {
+                                  final list =
+                                      (chargesFuture.data?.value ?? []);
+                                  final sub = list
+                                      .sublist(list.indexOf(v))
+                                      .map((e) => e.amount);
+                                  if (sub.isEmpty) {
                                     return 0;
                                   }
-                                  return sub.reduce((value, element) => value+element);
+                                  return sub.reduce(
+                                      (value, element) => value + element);
                                 },
                               )
                             ],

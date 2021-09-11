@@ -23,6 +23,7 @@ class MyDrawer extends ConsumerWidget {
     Menu(Icons.warning, "Low Stock Notice"),
     Menu(Icons.account_balance_wallet, "Charges History"),
     Menu(Icons.attach_money, "Tranzactions History"),
+    Menu(Icons.report, "Sales Report"),
   ];
 
   @override

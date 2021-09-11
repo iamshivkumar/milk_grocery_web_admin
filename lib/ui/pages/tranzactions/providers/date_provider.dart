@@ -3,7 +3,7 @@ import 'package:grocery_web_admin/utils/dates.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final dateRangeProvider =
-    ChangeNotifierProvider<DateRange>((ref) => DateRange());
+    ChangeNotifierProvider.autoDispose<DateRange>((ref) => DateRange());
 
 class DateRange extends ChangeNotifier {
   DateTime _start = Dates.today;
